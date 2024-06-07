@@ -27,7 +27,7 @@ barcode_data = scan_code()
 #     # parse the JSON response
 #     api_result_json = json.dumps(api_result.json())
 
-#     print(api_result_json)w
+#     print(api_result_json)
 
 
 for barcodes in barcode_data:
