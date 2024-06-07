@@ -7,7 +7,7 @@ def scan_code():
     stored_barcodes = []
 
     cap = cv2.VideoCapture(0)
-    cap.set(3, 640)  # width
+    cap.set(3, 1080)  # width
     cap.set(4, 480)  # height
 
     while True:
@@ -21,10 +21,11 @@ def scan_code():
         if barcodes:
             for barcode in barcodes:
                 barcode_data = barcode.data.decode('utf-8')
-                print(barcode_data)
                 if barcode_data not in stored_barcodes:
                     stored_barcodes.append(barcode_data)
-                time.sleep(2)
+                    # Call the callback function with new barcode data
+                    print(stored_barcodes)
+                    time.sleep(2)
 
         cv2.imshow('Testing-code-scan', frame)
         if cv2.waitKey(1) & 0xFF == 27:  # Press 'Esc' to exit
@@ -32,5 +33,4 @@ def scan_code():
 
     cap.release()  # Release the camera
     cv2.destroyAllWindows()  # Close all OpenCV windows
-
     return stored_barcodes
