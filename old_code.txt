@@ -1,0 +1,13 @@
+import openfoodfacts
+
+# api = openfoodfacts.API(user_agent="openfoodfacts-scanner, country=UK")
+
+# def get_product_info(barcode_data):
+#     for data in barcode_data:
+#         product_info = api.product.get(data)
+
+#         brand = product_info["brands"]
+
+#         print(brand)
+
+# get_product_info(barcode_data)
