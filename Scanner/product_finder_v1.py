@@ -1,4 +1,4 @@
-from camera import scan_code
+from Scanner.camera import scan_code
 import requests
 import json
 with open('dummy.json', 'r') as file:
@@ -27,7 +27,7 @@ barcode_data = scan_code()
 #     # parse the JSON response
 #     api_result_json = json.dumps(api_result.json())
 
-#     print(api_result_json)32
+#     print(api_result_json)
 
 
 for barcodes in barcode_data:
