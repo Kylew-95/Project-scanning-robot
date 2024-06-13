@@ -1,14 +1,15 @@
-from Scanner.camera import scan_code
+from Scanner import scan_code
 import requests
 import json
-with open('dummy.json', 'r') as file:
+import os
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+json_file = os.path.join(script_dir, '..', 'dummy.json')
+with open(json_file, 'r') as file:
     dummy_json_data = file.read()
 
 product_data = json.loads(dummy_json_data)
-
-
-barcode_data = scan_code()
-
 
 # WORKS DONT TOUCH
 # for get_barcode_data in barcode_data:
@@ -30,6 +31,7 @@ barcode_data = scan_code()
 #     print(api_result_json)
 
 
-for barcodes in barcode_data:
-    if barcodes in product_data['request_parameters']['gtin']:
-        print(product_data['product']['title'])
+def get_product_name(barcode_data):
+    for barcodes in barcode_data:
+        if barcodes in product_data['request_parameters']['gtin']:
+            print(product_data['product']['title'])

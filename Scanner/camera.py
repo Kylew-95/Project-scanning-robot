@@ -29,7 +29,6 @@ def scan_code():
         cv2.imshow('Testing-code-scan', frame)
         if cv2.waitKey(1) & 0xFF == 27:  # Press 'Esc' to exit
             break
-
     cap.release()  # Release the camera
     cv2.destroyAllWindows()  # Close all OpenCV windows
 
