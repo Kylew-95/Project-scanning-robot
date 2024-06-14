@@ -31,7 +31,10 @@ product_data = json.loads(dummy_json_data)
 #     print(api_result_json)
 
 
-def get_product_name(barcode_data):
+def get_product_info(barcode_data):
     for barcodes in barcode_data:
         if barcodes in product_data['request_parameters']['gtin']:
-            print(product_data['product']['title'])
+            title = product_data['product']['title']
+            img = product_data['product']['main_image']['link']
+            print(title, img)
+            return (title, img)
