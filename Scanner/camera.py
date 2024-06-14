@@ -30,13 +30,12 @@ def scan_code():
         if barcodes:
             for barcode in barcodes:
                 barcode_data = barcode.data.decode('utf-8')
-                if barcode_data not in stored_barcodes:
-                    stored_barcodes.append(barcode_data)
-                    # Play sound when a new barcode is detected
-                    # play(scanner_beep)
-                    beep()
-                    time.sleep(2)
-                    print(stored_barcodes)
+                stored_barcodes.append(barcode_data)
+                # Play sound when a new barcode is detected
+                # play(scanner_beep)
+                beep()
+                time.sleep(2)
+                # print(stored_barcodes)
 
         cv2.imshow('Testing-code-scan', frame)
         if cv2.waitKey(1) & 0xFF == 27:  # Press 'Esc' to exit

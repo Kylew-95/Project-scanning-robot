@@ -35,6 +35,6 @@ def get_product_info(barcode_data):
     for barcodes in barcode_data:
         if barcodes in product_data['request_parameters']['gtin']:
             title = product_data['product']['title']
-            img = product_data['product']['main_image']['link']
-            print(title, img)
-            return (title, img)
+            # img = product_data['product']['main_image']['link']
+            # print(title)
+            return (title)
