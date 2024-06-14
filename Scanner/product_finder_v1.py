@@ -34,9 +34,11 @@ product_data = json.loads(dummy_json_data)
 
 #     return product_data
 
+print(f"my stored: {stored_barcodes}")
 
-def get_product_info(barcode_data):
-    for barcodes in barcode_data:
+
+def get_product_info():
+    for barcodes in stored_barcodes:
         if barcodes in product_data['request_parameters']['gtin']:
             title = product_data['product']['title']
             # img = product_data['product']['main_image']['link']

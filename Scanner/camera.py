@@ -4,8 +4,7 @@ from pyzbar.pyzbar import decode
 import os
 from sound import beep
 
-stored_barcodes = ['8714100597347', '8714100597347',
-                   '8714100597347', '8714100597347']
+stored_barcodes = []
 
 
 def scan_code():
@@ -38,7 +37,7 @@ def scan_code():
                 # play(scanner_beep)
                 beep()
                 time.sleep(2)
-                # print(stored_barcodes)
+                # print(f"my stored: {stored_barcodes}")
 
         cv2.imshow('Testing-code-scan', frame)
         if cv2.waitKey(1) & 0xFF == 27:  # Press 'Esc' to exit

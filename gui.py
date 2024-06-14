@@ -53,20 +53,17 @@ value = customtkinter.StringVar()
 
 item_counter = 0
 
-multi_barcode_data = list(stored_barcodes)
-
 
 def on_button_click(e):
     scan_code()
     global item_counter
-    global multi_barcode_data
-    print(f"multi: {multi_barcode_data}")
-    for multi in multi_barcode_data:
+    print(f"multi: {stored_barcodes}")
+    for multi in stored_barcodes:
         if stored_barcodes:
             item_counter += 1
-            product_info = get_product_info(multi)
+            product_info = get_product_info()
             for _ in product_info:
-                value.set(f"{product_info} x{multi_barcode_data.count(multi)}")
+                value.set(f"{product_info} x{stored_barcodes.count(multi)}")
 
 
 h2 = customtkinter.CTkLabel(app, text="Scan your product", font=("Arial", 20))
