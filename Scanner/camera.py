@@ -4,10 +4,13 @@ from pyzbar.pyzbar import decode
 import os
 from sound import beep
 
+stored_barcodes = ['8714100597347', '8714100597347',
+                   '8714100597347', '8714100597347']
+
 
 def scan_code():
-    stored_barcodes = []
 
+    global stored_barcodes
     cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
     cap.set(3, 1080)  # width
     cap.set(4, 480)  # height

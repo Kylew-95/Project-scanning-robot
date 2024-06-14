@@ -1,4 +1,4 @@
-from Scanner.camera import scan_code
+from Scanner.camera import scan_code, stored_barcodes
 from Scanner.product_finder_v1 import get_product_info
 import tkinter
 import customtkinter
@@ -53,17 +53,18 @@ value = customtkinter.StringVar()
 
 item_counter = 0
 
+multi_barcode_data = list(stored_barcodes)
+
 
 def on_button_click(e):
-    barcode_data = scan_code()
+    scan_code()
     global item_counter
-
-    multi_barcode_data = list(barcode_data)
+    global multi_barcode_data
     print(f"multi: {multi_barcode_data}")
     for multi in multi_barcode_data:
-        if barcode_data:
+        if stored_barcodes:
             item_counter += 1
-            product_info = get_product_info(barcode_data)
+            product_info = get_product_info(multi)
             for _ in product_info:
                 value.set(f"{product_info} x{multi_barcode_data.count(multi)}")
 
