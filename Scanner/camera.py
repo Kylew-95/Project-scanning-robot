@@ -14,13 +14,6 @@ def scan_code():
     cap.set(3, 1080)  # width
     cap.set(4, 480)  # height
 
-    # current_directory = os.path.dirname(os.path.abspath(__file__))
-    # mp3_file_path = os.path.join(
-    #     current_directory, "Barcode_scanner_beep_sound.mp3")
-
-    # scanner_beep = AudioSegment.from_mp3(
-    #     mp3_file_path)
-
     while True:
         success, frame = cap.read()
 
