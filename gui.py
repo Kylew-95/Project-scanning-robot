@@ -46,29 +46,37 @@ main_label = customtkinter.CTkLabel(
     app, text="WELCOME TO TROLL-E", font=("Arial", 30))
 main_label.pack(pady=50)
 
-value = customtkinter.StringVar()
 
-# Function to handle button click
-
-
-item_counter = 0
+value = customtkinter.StringVar(
+    app,)
 
 
 def on_button_click(e):
-    scan_code()
-    global item_counter
+    scan_code()  # Assuming this updates `stored_barcodes`
     print(f"multi: {stored_barcodes}")
+    # Clear any previous values
+    value.set("")
     for multi in stored_barcodes:
-        if stored_barcodes:
-            item_counter += 1
-            product_info = get_product_info()
-            for _ in product_info:
-                value.set(f"{product_info} x{stored_barcodes.count(multi)}")
+        product_info = get_product_info()
+        if product_info:
+            title, symbol, price,  = product_info
+            count = stored_barcodes.count(multi)
+            item_price = count * price
+            # Set the value based on product info
+            # Ensure price is formatted with 2 decimal places
+            formatted_price = f"{symbol}{item_price}"
+            value.set(f"{title} x{count}\n{formatted_price} ")
 
 
 h2 = customtkinter.CTkLabel(app, text="Scan your product", font=("Arial", 20))
 h2.bind("<Button-1>", on_button_click)
 h2.pack(pady=20)
+
+# Remove items from list
+remove_button = customtkinter.CTkButton(
+    app, text="Remove", command=lambda: stored_barcodes.pop())
+
+remove_button.pack(pady=5)
 
 # Display product info
 product_info_label = customtkinter.CTkLabel(
@@ -80,7 +88,7 @@ gif_frames = load_gif("./Assets/NFC_gif/wCneoCuZt2 (1).gif")
 
 # Show GIF
 gif_label = customtkinter.CTkLabel(app, text="")
-gif_label.pack(pady=20)
+gif_label.pack(pady=5)
 animate_gif(gif_label, gif_frames, 60)
 
 # Product image label
