@@ -1,8 +1,9 @@
 import cv2
-import threading
 from pyzbar.pyzbar import decode
 from queue import Queue
 from sound import beep
+from time import sleep
+
 
 # Initialize the video capture
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
@@ -27,9 +28,10 @@ def scan_code():
         barcodes = decode(frame)
         for barcode in barcodes:
             barcode_data = barcode.data.decode('utf-8')
-            stored_barcodes.put(barcode_data)  # Allow duplicates
-            beep()  # Play a beep sound for a new barcode
+            stored_barcodes.put(barcode_data)
 
+            beep()  # Play a beep sound for a new barcode
+            sleep(2)
         # Display the video frame with the barcode overlay
         cv2.imshow("Barcode Scanner", frame)
 

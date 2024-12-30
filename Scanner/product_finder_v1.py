@@ -58,7 +58,9 @@ def get_product_info():
                 symbol = '£'  # Assuming currency symbol
                 price = product_data['also_bought'][1]['price']['value']
 
+                product_image = product_data['product']['main_image']['link']
+
                 print(f"Found product: {title}")  # Debugging print
-                return title, symbol, price
+                return title, symbol, price, product_image
 
     return None  # If no barcode matches
