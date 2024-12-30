@@ -61,8 +61,10 @@ def update_gui():
         if product_info:
             title, symbol, price = product_info
             count = barcode_counter[stored_barcodes]
-            print(f"Product info: {title}, {symbol}{price} x{count}")
-            value.set(f"Product: {title}\nPrice: {symbol}{price:.2f} x{count}")
+            full_price = count * price
+            print(f"Product info: {title}, {symbol}{full_price} x{count}")
+            value.set(f"Product: {title}\nPrice: {
+                      symbol}{full_price:.2f} x{count}")
     # Schedule the next GUI update
     app.after(100, update_gui)  # Update the GUI every 100 ms
 
