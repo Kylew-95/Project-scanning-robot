@@ -6,8 +6,9 @@
     "credits_used_this_request": 1
   },
   "request_parameters": {
+    "__comment": "This this the original barcode 8714100597347",
     "amazon_domain": "amazon.co.uk",
-    "gtin": "8714100597347",
+    "gtin": "5099802150117",
     "type": "product"
   },
   "request_metadata": {

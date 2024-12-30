@@ -42,13 +42,23 @@ product_data_list.append(json.loads(dummy_json_data))
 
 
 def get_product_info():
-    # product_data_list = fetch_product_data()
-    for product_data in product_data_list:
-        for barcode in stored_barcodes:
-            if product_data['request_parameters']['gtin'] in barcode:
+    if not stored_barcodes.empty():
+        # Correct this to get the barcode data
+        barcode_data = stored_barcodes.get_nowait()
+        print(f"Processing barcode: {barcode_data}")  # Debugging print
+
+        # Iterate through product data and check for a match
+        for product_data in product_data_list:
+            gtin = product_data['request_parameters']['gtin']
+            print(f"Comparing barcode {barcode_data} with gtin {
+                  gtin}")  # Debugging print
+
+            if gtin == barcode_data:
                 title = product_data['product']['title']
-                # Assuming also_bought is a list, accessing the first item
-                symbol = '£'
+                symbol = '£'  # Assuming currency symbol
                 price = product_data['also_bought'][1]['price']['value']
 
-    return (title, symbol, price)
+                print(f"Found product: {title}")  # Debugging print
+                return title, symbol, price
+
+    return None  # If no barcode matches

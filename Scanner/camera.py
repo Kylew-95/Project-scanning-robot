@@ -1,42 +1,42 @@
 import cv2
-import time
+import threading
 from pyzbar.pyzbar import decode
-import os
+from queue import Queue
 from sound import beep
 
-stored_barcodes = []
+# Initialize the video capture
+cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+cap.set(3, 480)  # Set width
+cap.set(4, 480)  # Set height
+
+# Queue to store scanned barcodes
+stored_barcodes = Queue()
+stop_threads = False  # Thread control flag
 
 
 def scan_code():
-
-    global stored_barcodes
-    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
-    cap.set(3, 1080)  # width
-    cap.set(4, 480)  # height
-
-    while True:
+    """Reads barcodes using the webcam."""
+    global stop_threads
+    while not stop_threads:
         success, frame = cap.read()
-
         if not success:
             print("Failed to capture image")
             continue
 
+        # Decode barcodes from the frame
         barcodes = decode(frame)
-        if barcodes:
-            for barcode in barcodes:
-                barcode_data = barcode.data.decode('utf-8')
-                stored_barcodes.append(barcode_data)
-                # Play sound when a new barcode is detected
-                # play(scanner_beep)
-                beep()
-                time.sleep(2)
-                # print(f"my stored: {stored_barcodes}")
+        for barcode in barcodes:
+            barcode_data = barcode.data.decode('utf-8')
+            stored_barcodes.put(barcode_data)  # Allow duplicates
+            beep()  # Play a beep sound for a new barcode
 
-        cv2.imshow('Testing-code-scan', frame)
-        if cv2.waitKey(1) & 0xFF == 27:  # Press 'Esc' to exit
+        # Display the video frame with the barcode overlay
+        cv2.imshow("Barcode Scanner", frame)
+
+        # Exit when 'Esc' key is pressed
+        if cv2.waitKey(1) & 0xFF == 27:
+            stop_threads = True
             break
 
-    cap.release()  # Release the camera
-    cv2.destroyAllWindows()  # Close all OpenCV windows
-
-    return stored_barcodes
+    cap.release()
+    cv2.destroyAllWindows()  # Close OpenCV window when done

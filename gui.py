@@ -1,13 +1,11 @@
-from Scanner.camera import scan_code, stored_barcodes
-from Scanner.product_finder_v1 import get_product_info
-import tkinter
+import threading
 import customtkinter
 from PIL import Image, ImageTk
-import itertools
-import io
-import requests
+from Scanner.camera import stored_barcodes, scan_code  # From camera.py
+from Scanner.product_finder_v1 import get_product_info  # From product_finder_v1.py
+from collections import Counter  # To count barcode occurrences
 
-# Function to animate GIF
+# Function to animate the GIF
 
 
 def animate_gif(label, frames, delay, count=[0]):
@@ -16,7 +14,7 @@ def animate_gif(label, frames, delay, count=[0]):
     count[0] += 1
     label.after(delay, animate_gif, label, frames, delay, count)
 
-# Function to load GIF frames
+# Function to load the GIF frames
 
 
 def load_gif(file_path):
@@ -32,68 +30,90 @@ def load_gif(file_path):
     return frames
 
 
-# System settings
+# System settings for CustomTkinter
 customtkinter.set_appearance_mode("System")
 customtkinter.set_default_color_theme("blue")
 
-# Our app frame
+# Initialize the GUI
 app = customtkinter.CTk()
 app.geometry("720x480")
 app.title("Troll-E")
 
-# Add UI
+# Add UI components
 main_label = customtkinter.CTkLabel(
     app, text="WELCOME TO TROLL-E", font=("Arial", 30))
 main_label.pack(pady=50)
 
+# String variable to hold product info
+value = customtkinter.StringVar(app)
 
-value = customtkinter.StringVar(
-    app,)
+# Counter to keep track of barcode occurrences
+barcode_counter = Counter()
 
 
-def on_button_click(e):
-    scan_code()  # Assuming this updates `stored_barcodes`
-    print(f"multi: {stored_barcodes}")
-    # Clear any previous values
-    value.set("")
-    for multi in stored_barcodes:
+def update_gui():
+    # Only update if the barcode queue has items
+    if not stored_barcodes.empty():
+        # Get product info for the barcode
         product_info = get_product_info()
+
+        barcode_counter[stored_barcodes] += 1
         if product_info:
-            title, symbol, price,  = product_info
-            count = stored_barcodes.count(multi)
-            item_price = count * price
-            # Set the value based on product info
-            # Ensure price is formatted with 2 decimal places
-            formatted_price = f"{symbol}{item_price}"
-            value.set(f"{title} x{count}\n{formatted_price} ")
+            title, symbol, price = product_info
+            count = barcode_counter[stored_barcodes]
+            print(f"Product info: {title}, {symbol}{price} x{count}")
+            value.set(f"Product: {title}\nPrice: {symbol}{price:.2f} x{count}")
+    # Schedule the next GUI update
+    app.after(100, update_gui)  # Update the GUI every 100 ms
 
-
-h2 = customtkinter.CTkLabel(app, text="Scan your product", font=("Arial", 20))
-h2.bind("<Button-1>", on_button_click)
-h2.pack(pady=20)
-
-# Remove items from list
-remove_button = customtkinter.CTkButton(
-    app, text="Remove", command=lambda: stored_barcodes.pop())
-
-remove_button.pack(pady=5)
 
 # Display product info
 product_info_label = customtkinter.CTkLabel(
     app, textvariable=value, font=("Arial", 16))
 product_info_label.pack(pady=20)
 
-# Add GIF
-gif_frames = load_gif("./Assets/NFC_gif/wCneoCuZt2 (1).gif")
-
-# Show GIF
+# Load and display the animated GIF
+gif_frames = load_gif(
+    "./Assets/NFC_gif/wCneoCuZt2 (1).gif")  # Path to your GIF
 gif_label = customtkinter.CTkLabel(app, text="")
 gif_label.pack(pady=5)
 animate_gif(gif_label, gif_frames, 60)
 
-# Product image label
+# Product image label (optional)
 product_img_label = customtkinter.CTkLabel(app, text="")
 product_img_label.pack(pady=20)
 
-# Run app
+# Remove items from list
+remove_button = customtkinter.CTkButton(
+    app, text="Remove", command=lambda: stored_barcodes.empty if not stored_barcodes.empty() else None)
+remove_button.pack(pady=5)
+
+# Start the barcode scanning in a separate thread
+
+
+def start_camera_thread():
+    global stop_threads
+    stop_threads = False
+    reader_thread = threading.Thread(target=scan_code)
+    reader_thread.daemon = True  # Daemonize the thread so it exits when the program exits
+    reader_thread.start()
+
+
+# Start the camera thread
+start_camera_thread()
+
+# Run the GUI update function to handle barcode and product info updates
+
+
+def start_gui_update_thread():
+    # Update the GUI periodically without blocking the main loop
+    update_gui()
+
+
+# Run the GUI update in a separate thread
+gui_update_thread = threading.Thread(target=start_gui_update_thread)
+gui_update_thread.daemon = True  # Daemonize so it exits when the app closes
+gui_update_thread.start()
+
+# Run the app
 app.mainloop()
